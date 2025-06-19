@@ -1,0 +1,356 @@
+/* CARD CUSTOM */
+.card-custom,
+.vm-card {
+  max-width: 1000px;
+  margin: 40px auto;
+  background-color: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.card-custom:hover,
+.vm-card:hover {
+  transform: translateY(-5px);
+}
+
+/* NAVBAR */
+.navbar::after,
+.nav-link::after,
+.nav-link.dropdown-toggle::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #000;
+  opacity: 0;
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-link:hover::after,
+.nav-link.dropdown-toggle:hover::after {
+  width: 100%;
+  opacity: 1;
+}
+
+.nav-link,
+.nav-link.dropdown-toggle {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 5px;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: #0d6efd !important;
+}
+
+.custom-button {
+  color: black;
+}
+
+.btn-opang {
+  background-color: red;
+}
+
+/* CARD IMAGE ZOOM */
+.card-img-top {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.card-img-top.zoomed {
+  transform: scale(1.2);
+  z-index: 10;
+  position: relative;
+}
+
+/* MODAL */
+.modal-content {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.modal-body img {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.modal-body img:hover {
+  transform: scale(1.02);
+}
+
+/* CARD CONTENT */
+.card-content,
+.vm-card-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.card-img,
+.vm-card-img {
+  flex: 1 1 300px;
+  max-width: 400px;
+  overflow: hidden;
+}
+
+.card-img img,
+.vm-card-img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.card-text,
+.vm-card-text {
+  flex: 1;
+  padding: 20px 30px;
+}
+
+.card-title,
+.vm-card-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.card-description,
+.vm-card-description {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.card-description ul,
+.vm-card-description ul {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.card-description li,
+.vm-card-description li {
+  margin-bottom: 8px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.card-footer,
+.vm-card-footer {
+  margin-top: 20px;
+  color: #888;
+  font-size: 14px;
+}
+
+/* RESPONSIVE CARD */
+@media (max-width: 768px) {
+  .card-content,
+  .vm-card-content {
+    flex-direction: column;
+  }
+
+  .card-img,
+  .vm-card-img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .card-img img,
+  .vm-card-img img {
+    height: auto;
+    object-fit: contain;
+  }
+
+  .card-text,
+  .vm-card-text {
+    padding: 20px;
+  }
+}
+
+/* ANIMATION */
+.from {
+  transform: scale(0.7);
+  opacity: 0;
+}
+
+.to {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* PRODUCT CARD */
+.product-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #2c3e50;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+.product-card {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.product-card img {
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #ddd;
+}
+
+.product-card .card-body {
+  padding: 20px;
+}
+
+.product-card .btn {
+  border-radius: 25px;
+  padding: 8px 20px;
+}
+
+/* CONTACT FORM */
+.contact-container {
+  max-width: 600px;
+  margin: 50px auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  text-align: center;
+}
+
+.contact-container h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.contact-container p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.contact-form .form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.contact-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border 0.3s;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+button {
+  background-color: #4f46e5;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #4338ca;
+}
+
+
+.carousel-item img {
+  height: 500px; /* atau sesuai kebutuhan */
+  object-fit: cover; /* penting! */
+}
+
+
+/* Styling untuk carousel */
+#carouselExample {
+  max-width: 100%;
+  overflow: hidden;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.carousel-image-container {
+  height: 600px; /* Diperbesar dari 400px */
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.carousel-image-container img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  /* Menghindari distorsi gambar */
+}
+
+/* Memperbaiki tampilan tombol navigasi */
+.carousel-control-prev,
+.carousel-control-next {
+  width: 10%;
+  background: rgba(0,0,0,0.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#carouselExample:hover .carousel-control-prev,
+#carouselExample:hover .carousel-control-next {
+  opacity: 1;
+}
+
+/* Indikator lebih jelas */
+.carousel-indicators {
+  margin-bottom: 0.5rem;
+}
+
+.carousel-indicators button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+/* Untuk layar yang lebih lebar, buat carousel lebih besar */
+@media (min-width: 992px) {
+  #carouselExample {
+    width: 90%;
+    max-width: 1200px; /* Maksimal lebar agar tidak terlalu lebar di layar besar */
+  }
+  
+  .carousel-image-container {
+    height: 700px; /* Lebih tinggi lagi di layar besar */
+  }
+}
