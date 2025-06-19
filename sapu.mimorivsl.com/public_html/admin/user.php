@@ -3,17 +3,41 @@
 session_start();
 
 // Include database connection file
-require_once 'koneksi.php';
+require_once 'koneksi.php'; // Pastikan file ini ada dan membuat koneksi $koneksi
 
 // Ensure the user is logged in
+// Ini adalah pengecekan sederhana, Anda mungkin ingin menambahkan otorisasi peran di sini
+// Contoh: if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'ADMIN') { ... }
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
 
 // Fetch user data from the database
-$sql = "SELECT * FROM users";
-$result = $koneksi->query($sql);
+// Menggunakan prepared statement meskipun ini query SELECT sederhana tanpa input user
+// untuk konsistensi dan kebiasaan baik.
+$users = []; // Inisialisasi array untuk menyimpan data user
+$stmt = $koneksi->prepare("SELECT id, username, nama, email, role FROM users ORDER BY username ASC");
+
+if ($stmt) {
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $users[] = $row;
+        }
+        $result->free(); // Bebaskan hasil set
+    }
+    $stmt->close(); // Tutup statement
+} else {
+    // Handle error jika prepared statement gagal
+    error_log("Error preparing statement: " . $koneksi->error);
+    // Anda bisa menampilkan pesan error yang lebih user-friendly di sini
+}
+
+// Tutup koneksi database
+mysqli_close($koneksi);
 ?>
 
 
@@ -28,41 +52,31 @@ $result = $koneksi->query($sql);
     <meta name="description" content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
     <meta name="keywords" content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard" />
     
-    <!--begin::Fonts-->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
       integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
       crossorigin="anonymous"
     />
-    <!--end::Fonts-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
       integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
       crossorigin="anonymous"
     />
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-    <!--begin::Third Party Plugin(Bootstrap Icons)-->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
       integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
       crossorigin="anonymous"
     />
-    <!--end::Third Party Plugin(Bootstrap Icons)-->
-    <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="css/adminlte.css" />
-    <!--end::Required Plugin(AdminLTE)-->
-    <!-- apexcharts -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
-    <!-- jsvectormap -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
@@ -72,12 +86,9 @@ $result = $koneksi->query($sql);
   </head>
   
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-    <!--begin::App Wrapper-->
     <div class="app-wrapper">
-      <!--begin::Header-->
       <nav class="app-header navbar navbar-expand bg-body">
         <div class="container-fluid">
-          <!--begin::Start Navbar Links-->
           <ul class="navbar-nav">
             <li class="nav-item">
               <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
@@ -86,20 +97,15 @@ $result = $koneksi->query($sql);
             </li>
             <li class="nav-item d-none d-md-block"><a href="./index.php" class="nav-link">Home</a></li>
           </ul>
-          <!--end::Start Navbar Links-->
-          <!--begin::End Navbar Links-->
           <ul class="navbar-nav ms-auto">
-            <!--begin::User Menu Dropdown-->
             <li class="nav-item dropdown user-menu">
               <ul class="navbar-nav ms-auto">
-                    <!-- Fullscreen Toggle -->
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-lte-toggle="fullscreen">
                             <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
                             <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
                         </a>
                     </li>
-                    <!-- User Menu -->
                     <li class="nav-item dropdown user-menu">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">
                             <i class="bi bi-person-circle"></i>
@@ -113,35 +119,22 @@ $result = $koneksi->query($sql);
                     </li>
                 </ul>
             </li>
-            <!--end::User Menu Dropdown-->
-          </ul>
-          <!--end::End Navbar Links-->
-        </div>
+            </ul>
+          </div>
       </nav>
-      <!--end::Header-->
-        
-      <!--begin::Sidebar-->
       <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-        <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
-          <!--begin::Brand Link-->
           <a href="../user/index.html" class="brand-link">
-            <!--begin::Brand Image-->
             <img
               src="../assets_login/img/favicon.png"
               alt=""
               class="brand-image opacity-75 shadow"
             />
-            <!--end::Brand Image-->
-            <!--begin::Brand Text-->
             <span class="brand-text fw-light">Sapu jagaD</span>
-            <!--end::Brand Text-->
-          </a>
-          <!--end::Brand Link-->
-        </div>
+            </a>
+          </div>
        <div class="sidebar-wrapper">
           <nav class="mt-2">
-            <!--begin::Sidebar Menu-->
             <ul
               class="nav sidebar-menu flex-column"
               data-lte-toggle="treeview"
@@ -223,20 +216,12 @@ $result = $koneksi->query($sql);
                 </ul>
               </li>
             </ul>
-            <!--end::Sidebar Menu-->
-          </nav>
+            </nav>
         </div>
-        <!--end::Sidebar Wrapper-->
-      </aside>
-      <!--end::Sidebar-->
-
-      <!--begin::App Main-->
+        </aside>
       <main class="app-main">
-        <!--begin::App Content Header-->
         <div class="app-content-header">
-          <!--begin::Container-->
           <div class="container-fluid">
-            <!--begin::Row-->
             <div class="row">
               <div class="col-sm-6"><h3 class="mb-0">User List</h3></div>
               <div class="col-sm-6">
@@ -246,21 +231,12 @@ $result = $koneksi->query($sql);
                 </ol>
               </div>
             </div>
-            <!--end::Row-->
+            </div>
           </div>
-          <!--end::Container-->
-        </div>
-        <!--end::App Content Header-->
-
-        <!--begin::App Content-->
         <div class="app-content">
-          <!--begin::Container-->
           <div class="container-fluid">
-            <!--begin::Row-->
             <div class="row">
-              <!--begin::Col-->
               <div class="col-lg-12 connectedSortable">
-                <!--begin::User Table Card-->
                 <div class="card">
                   <div class="card-header">
                     <h3 class="card-title">User Table</h3>
@@ -285,23 +261,42 @@ $result = $koneksi->query($sql);
                       <tbody>
                         <?php
                         $no = 1;
-                        if ($result && $result->num_rows > 0) {
-                          while ($user = $result->fetch_assoc()) {
+                        if (!empty($users)) { // Check if $users array is not empty
+                          foreach ($users as $user) {
                             echo "<tr>
                                     <td>{$no}</td>
-                                    <td>{$user['username']}</td>
-                                    <td>{$user['full_name']}</td>
-                                    <td>{$user['email']}</td>
+                                    <td>" . htmlspecialchars($user['username']) . "</td>
+                                    <td>" . htmlspecialchars($user['nama']) . "</td>
+                                    <td>" . htmlspecialchars($user['email']) . "</td>
                                     <td>
-                                      <span class='badge " . ($user['user_level'] == 'admin' ? 'text-bg-success' : 'text-bg-primary') . "'>
-                                        {$user['user_level']}
+                                      <span class='badge ";
+                                      // Logic to determine badge color based on role
+                                      switch (strtoupper($user['role'])) {
+                                          case 'ADMIN':
+                                              echo 'text-bg-danger'; // Or any color you prefer for admin
+                                              break;
+                                          case 'MANAGER':
+                                              echo 'text-bg-warning';
+                                              break;
+                                          case 'PEGAWAI':
+                                              echo 'text-bg-info';
+                                              break;
+                                          case 'USER':
+                                              echo 'text-bg-primary';
+                                              break;
+                                          default:
+                                              echo 'text-bg-secondary'; // Default color for unknown roles
+                                              break;
+                                      }
+                                      echo "'>
+                                        " . htmlspecialchars($user['role']) . "
                                       </span>
                                     </td>
                                     <td>
-                                      <a href='edit_user.php?id={$user['user_id']}' class='btn btn-warning btn-sm' title='Edit User'>
+                                      <a href='edit_user.php?id=" . htmlspecialchars($user['id']) . "' class='btn btn-warning btn-sm' title='Edit User'>
                                         <i class='bi bi-pencil'></i>
                                       </a>
-                                      <a href='delete_user.php?id={$user['user_id']}' class='btn btn-danger btn-sm' 
+                                      <a href='delete_user.php?id=" . htmlspecialchars($user['id']) . "' class='btn btn-danger btn-sm' 
                                          onclick='return confirm(\"Are you sure you want to delete this user?\")' title='Delete User'>
                                         <i class='bi bi-trash'></i>
                                       </a>
@@ -317,61 +312,35 @@ $result = $koneksi->query($sql);
                     </table>
                   </div>
                 </div>
-                <!--end::User Table Card-->
+                </div>
               </div>
-              <!--end::Col-->
             </div>
-            <!--end::Row-->
           </div>
-          <!--end::Container-->
-        </div>
-        <!--end::App Content-->
-      </main>
-      <!--end::App Main-->
-
-      <!--begin::Footer-->
+        </main>
       <footer class="app-footer">
-        <!--begin::To the end-->
         <div class="float-end d-none d-sm-inline">Anything you want</div>
-        <!--end::To the end-->
-        <!--begin::Copyright-->
         <strong>
-          Copyright &copy; 2014-2024&nbsp;
-          <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
+          Copyright &copy; 2014-<?= date('Y') ?>&nbsp; <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
         </strong>
         All rights reserved.
-        <!--end::Copyright-->
-      </footer>
-      <!--end::Footer-->
-    </div>
-    <!--end::App Wrapper-->
-
-    <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+        </footer>
+      </div>
     <script
       src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
       integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
       crossorigin="anonymous"
     ></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-    <!--begin::Required Plugin(popperjs for Bootstrap 5)-->
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
       integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
       crossorigin="anonymous"
     ></script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)-->
-    <!--begin::Required Plugin(Bootstrap 5)-->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     ></script>
-    <!--end::Required Plugin(Bootstrap 5)-->
-    <!--begin::Required Plugin(AdminLTE)-->
     <script src="js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)-->
-    <!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
       const Default = {
@@ -392,16 +361,11 @@ $result = $koneksi->query($sql);
         }
       });
     </script>
-    <!--end::OverlayScrollbars Configure-->
-
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
     <script
       src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"
       integrity="sha256-ipiJrswvAR4VAx/th+6zWsdeYmVae0iJuiR+6OqHJHQ="
       crossorigin="anonymous"
     ></script>
-    <!-- sortablejs -->
     <script>
       const connectedSortables = document.querySelectorAll('.connectedSortable');
       connectedSortables.forEach((connectedSortable) => {
@@ -416,6 +380,5 @@ $result = $koneksi->query($sql);
         cardHeader.style.cursor = 'move';
       });
     </script>
-    <!--end::Script-->
-  </body>
+    </body>
 </html>

@@ -79,7 +79,7 @@ if (isset($_GET['error'])) {
         <meta name="description" content="Halaman login sistem Sapu Jagad" />
         <meta name="author" content="Sapu Jagad" />
         <title>Login - Sapu Jagad Admin</title>
-        <link href="css/styles.css" rel="stylesheet" />
+        <link href="./css/adminlte.rtl.min.css" rel="stylesheet" />
         <link rel="icon" type="image/x-icon" href="assets_login/img/favicon.png" />
         <script data-search-pseudo-elements defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js" crossorigin="anonymous"></script>

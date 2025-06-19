@@ -43,7 +43,7 @@ try {
     
     // Debug: Tampilkan beberapa data user untuk verifikasi
     // Gunakan kolom yang ada berdasarkan struktur tabel
-    $sample_users = $pdo->query("SELECT username, full_name, email FROM users");
+    $sample_users = $pdo->query("SELECT username, nama, email FROM users");
     $users_data = $sample_users->fetchAll(PDO::FETCH_ASSOC);
 
     // Query untuk menghitung user baru bulan ini (hanya jika kolom created_at ada)

@@ -1,46 +1,46 @@
 <?php
-// Start the session
+// Start session
 session_start();
 
-// Include database connection file
+// Include database connection
 require_once 'koneksi.php';
 
-// Ensure the user is logged in
+// Pastikan user sudah login
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
 
-// Check if 'id' parameter is passed in the URL
+// Cek apakah ada ID user yang diberikan melalui URL
 if (isset($_GET['id'])) {
-    // Get the user id
-    $user_id = $_GET['id'];
+    $user_id = intval($_GET['id']); // pastikan integer
 
-    // Create SQL query to delete the user based on the user_id
-    $sql = "DELETE FROM users WHERE user_id = ?";
+    // Cegah user menghapus dirinya sendiri
+    if (isset($_SESSION['id']) && $_SESSION['id'] == $user_id) {
+        header("Location: user.php?status=delete_failed&reason=self");
+        exit();
+    }
 
-    // Prepare and bind the statement
+    // Query hapus user berdasarkan ID
+    $sql = "DELETE FROM users WHERE id = ?";
+
     if ($stmt = $koneksi->prepare($sql)) {
-        $stmt->bind_param("i", $user_id); // 'i' for integer
+        $stmt->bind_param("i", $user_id);
 
-        // Execute the query
         if ($stmt->execute()) {
-            // If the query is successful, redirect to the user list page
-            header("Location: user.php");
+            // Sukses hapus
+            header("Location: user.php?status=delete_success");
             exit();
         } else {
-            // If there's an error, display the error message
-            echo "Error: " . $stmt->error;
+            echo "Error deleting user: " . $koneksi->error;
         }
 
-        // Close the statement
         $stmt->close();
     } else {
-        echo "Error: " . $koneksi->error;
+        echo "Query preparation failed: " . $koneksi->error;
     }
+
 } else {
-    // If no 'id' is passed in the URL, redirect to the user list page
-    header("Location: user.php");
-    exit();
+    echo "No user ID provided!";
 }
 ?>
